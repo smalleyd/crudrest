@@ -198,4 +198,4 @@ DropdownList.moveTo = function(c, index)
 
 DropdownList.genInput = Template.prototype.genInput;
 DropdownList.createAnchor = Template.prototype.createAnchor;
-DropdownList.toCaption = function(v) { return v.name }
+DropdownList.toCaption = function(v) { return v.name + ' (' + v.id + ')'; }

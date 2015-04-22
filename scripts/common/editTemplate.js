@@ -119,7 +119,7 @@ function DropField(id, caption, isRequired, fillCallback, selectCallback, footno
 	else
 	{
 		this.doFill = function(criteria) {
-			Template.post(fillCallback + '/find', { name: criteria.field.value }, function(data) {
+			Template.get(fillCallback + '/find', { name: criteria.field.value }, function(data) {
 				criteria.caller.fill(criteria, data); 
 			});
 		};
