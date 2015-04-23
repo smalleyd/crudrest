@@ -41,8 +41,8 @@ var ClientsHandler = new ListTemplate({
 		new DropField('defaultLanguageId', 'Select Default Language', true, 'languages', 'defaultLanguageName'),
 		new TextField('defaultLanguageName', 'Selected Default Language', undefined, undefined, true),
 		new BoolField('active', 'Is Active?', true),
-		new TextField('creator', 'Created At', 'toDateTime'),
-		new TextField('updater', 'Updated At', 'toDateTime') ] /*,
+		new TextField('createdAt', 'Created At', 'toDateTime'),
+		new TextField('updatedAt', 'Updated At', 'toDateTime') ],
 	SEARCH: {
 		NAME: 'client',
 		SINGULAR: 'Client',
@@ -65,10 +65,10 @@ var ClientsHandler = new ListTemplate({
 			new DropField('defaultLanguageId', 'Select Default Language', true, 'languages', 'defaultLanguageName'),
 			new TextField('defaultLanguageName', 'Selected Default Language', undefined, undefined, true),
 			new ListField('active', 'Is Active?', false, 'yesNoOptions', undefined, 'No Search'),
-			new DatesField('creator', 'Created At'),
-			new DatesField('updater', 'Updated At'),
+			new DatesField('createdAt', 'Created At'),
+			new DatesField('updatedAt', 'Updated At'),
 			new ListField('pageSize', 'Page Size', false, 'pageSizeOptions', 'Number of records on the page', 'Default') ]
-	} */
+	}
 });
 
 var UsersHandler = new ListTemplate({
@@ -158,9 +158,9 @@ var ApplicationsHandler = new ListTemplate({
 	          new TextField('currentQuestionStateName', 'Current Question State'),
 	          new TextField('stageName', 'Stage'),
 	          new TextField('metadata_source', 'Metadata Source'),
-	          new TextField('completedAt', 'Completed At', 'toDateTime'),
-	          new TextField('lastAnswerAt', 'Last Answer At', 'toDateTime'),
-	          new TextField('createdAt', 'Created At', 'toDateTime'),
+	          new TextField('completedDate', 'Completed At', 'toDateTime'),
+	          new TextField('lastAnswerDate', 'Last Answer At', 'toDateTime'),
+	          new TextField('startedDate', 'Created At', 'toDateTime'),
 	          new TextField('updatedAt', 'Updated At', 'toDateTime') ],
 	SEARCH: {
 		NAME: 'application',
