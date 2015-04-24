@@ -77,7 +77,7 @@ function RowAction(id, caption, css, condition)
 }
 
 ListTemplate.prototype = new Template();
-ListTemplate.prototype.init = function(body) { return this.filter(undefined, body); }
+ListTemplate.prototype.init = function(body) { return this.filter({}, body); }
 ListTemplate.prototype.filter = function(filter, body) { return this.run({ filter: filter, url: this.SEARCH_PATH }, body, this.SEARCH_METHOD); }
 
 ListTemplate.prototype.doPaging = function(criteria, elem)
