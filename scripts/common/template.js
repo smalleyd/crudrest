@@ -309,6 +309,62 @@ Template.prototype.toText = function(value)
 	return value;
 }
 
+/** Converts an array into a string with each item separated by a new-lines and/or carriage returns.
+ *  
+ *  @return empty string if no values found.
+ */
+Template.prototype.fromArray = function(values)
+{
+	if ((undefined == values) || (0 == values.length))
+		return '';
+
+	var value = values[0];
+
+	// Loop through the values and throw out any empty items.
+	for (var i = 1; i < values.length; i++)
+		value+= '\n' + values[i];
+
+	return value;
+}
+
+/** Converts an array into a string with each item separated by a new-lines and/or carriage returns.
+ *  
+ *  @return empty string if no values found.
+ */
+Template.prototype.fromArrayWithComma = function(values)
+{
+	if ((undefined == values) || (0 == values.length))
+		return '';
+
+	var value = values[0];
+
+	// Loop through the values and throw out any empty items.
+	for (var i = 1; i < values.length; i++)
+		value+= ', ' + values[i];
+
+	return value;
+}
+
+/** Converts a string separated by new-lines and/or carriage returns to an array.
+ *
+ *  @return empty array if no items found.
+ */
+Template.prototype.toArray = function(value)
+{
+	if ((undefined == value) || (0 == value.length))
+		return [];
+
+	// Split the values.
+	var values = value.split(this.REGEX_NEW_LINE);
+
+	// Loop through the values and throw out any empty items.
+	for (var i = 0; i < values.length; i++)
+		if ('' == (values[i] = $.trim(values[i])))
+			values.splice(i--, 1);
+
+	return values;
+}
+
 /** Rounds number to the specified digit. */
 Template.prototype.round = function(value, places)
 {

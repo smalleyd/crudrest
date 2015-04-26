@@ -39,6 +39,20 @@ function EditField(id, caption, isRequired, isLong, maxLength, size, footnote)
 	this.footnote = footnote;
 }
 
+//A text area field that supplies an array of values separated by new lines.
+function MultiField(id, caption, isRequired, width, height, footnote)
+{
+	this.isEditable = true;
+	this.isMulti = true;
+	this.id = id;
+	this.caption = caption;
+	this.isRequired = isRequired;
+	this.isLong = true;
+	this.maxLength = width;
+	this.size = height;
+	this.footnote = footnote;
+}
+
 function RangeField(id, caption, isRequired, maxLength, size, footnote)
 {
 	this.isEditable = this.isRange = true;
@@ -310,6 +324,8 @@ EditTemplate.prototype.populate = function(criteria, form)
 			value[name] = this.encodeHTML(elem.value); // To ensure that non-ASCII characters display.
 		else if (field.isTagger)
 			value[name] = field.widget.retrieve(criteria.texts[name]).selectedIds;
+		else if (field.isMulti)
+			value[name] = this.toArray(elem.value);
 		else
 			value[name] = elem.value;
 	}
@@ -432,6 +448,10 @@ EditTemplate.prototype.generate = function(criteria)
 				s.appendChild(e = this.genTextArea(name, field.maxLength ? field.maxLength : 40, field.size ? field.size : 4));
 			else
 				s.appendChild(e = this.genTextBox(name, field.maxLength, field.size));
+
+			// If the field is a "Multi" - multiple text items in an array - convert the array to text with each item separated by an new line.
+			if (field.isMulti)
+				value = this.fromArray(value);
 
 			if (undefined != value) e.value = value;
 		}
