@@ -9,6 +9,11 @@ Template.prototype.GIGA = 1024 * 1024 * 1024;
 Template.prototype.LISTS = { yesNoOptions: [ { id: 'true', name: 'Yes' }, { id: 'false', name: 'No' } ],
                              pageSizes: [ { id: 10, name: '10' }, { id: 20, name: '20' }, { id: 50, name: '50' }, { id: 100, name: '100' } ] };
 
+Template.prototype.REGEX_NEW_LINE = /[\n]+/;
+
+Template.prototype.CSS_ACTIONS = 'actions';
+Template.prototype.CSS_FIELDS = 'fields';
+
 Template.prototype.load = function(properties)
 {
 	if (undefined == properties)
@@ -80,6 +85,9 @@ Template.prototype.display = function(criteria, value)
 
 	if (this.onPostLoad)
 		this.onPostLoad(criteria);
+
+	if (criteria.isModal)
+		criteria.body.center();
 }
 
 Template.prototype.get = Template.get = function(url, params, handler, headers)
@@ -292,6 +300,27 @@ Template.prototype.makeElementDraggable = function(criteria, e)
 		b.top = c.bodyTop;
 		b.left = c.bodyLeft;
 	});
+}
+
+/** Set the maximum height for the fields section of the form. */
+Template.prototype.setFieldsMaxHeight = function(criteria)
+{
+	var w = $(window);
+	var b = criteria.body;
+	var f = criteria.fields;
+	var os = (b.height() - f.offsetHeight) + 15;    // The offset height (all other sections minus the fields section).
+	var maxHeight = w.height() - os;
+	if (w.height() < b.height())
+	{
+		f.style.height = maxHeight + 'px';
+		
+		// Also make it wider so it doesn't scroll horizontally on account of the vertical scroll bars.
+		f.style.width = (f.offsetWidth + 25) + 'px';
+	}
+
+	// Just in case the form grows set a body max-height.
+	else
+		f.style.maxHeight = maxHeight + 'px';
 }
 
 /** Formatters. */

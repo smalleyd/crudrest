@@ -40,6 +40,8 @@ var ClientsHandler = new ListTemplate({
 		new EditField('careersEmailAddress', 'Careers Email Address', false, false, 255, 50),
 		new DropField('defaultLanguageId', 'Select Default Language', true, 'languages', 'defaultLanguageName'),
 		new TextField('defaultLanguageName', 'Selected Default Language', undefined, undefined, true),
+		new MultiField('documentMimeTypes', 'Document MIME Types', true, 60, 5),
+		new MultiField('textResumeSources', 'Text Resume Sources', true, 60, 5),
 		new BoolField('active', 'Is Active?', true),
 		new TextField('createdAt', 'Created At', 'toDateTime'),
 		new TextField('updatedAt', 'Updated At', 'toDateTime') ],

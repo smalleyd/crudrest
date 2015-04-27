@@ -220,14 +220,11 @@ EditTemplate.prototype.doSearch = function(callback, body, filter) { this.run({ 
 
 EditTemplate.prototype.onPostLoad = function(criteria)
 {
+	if (criteria.isModal)
+		this.setFieldsMaxHeight(criteria);
+
 	if (criteria.firstField)
 		criteria.firstField.focus();
-
-	if (criteria.isModal)
-	{
-		criteria.body.center();
-		criteria.header.style.width = criteria.form.offsetWidth + 'px';	// KA-19345: on IE7 the H1 doesn't do a 100% width. DLS on 3/28/2011.
-	}
 
 	if (this.onEditorPostLoad)
 		this.onEditorPostLoad(criteria);
@@ -320,12 +317,12 @@ EditTemplate.prototype.populate = function(criteria, form)
 		}
 		else if ('checkbox' == elem.type)
 			value[name] = elem.checked;
+		else if (field.isMulti)	// MUST come before isLong handling because MultiField is both isMulti and isLong.
+			value[name] = this.toArray(elem.value);
 		else if (field.isLong)
 			value[name] = this.encodeHTML(elem.value); // To ensure that non-ASCII characters display.
 		else if (field.isTagger)
 			value[name] = field.widget.retrieve(criteria.texts[name]).selectedIds;
-		else if (field.isMulti)
-			value[name] = this.toArray(elem.value);
 		else
 			value[name] = elem.value;
 	}
@@ -382,6 +379,7 @@ EditTemplate.prototype.generate = function(criteria)
 	}
 
 	var tx = criteria.texts = {}; // For keeping references to the text fields.
+	var fs = criteria.fields = this.addDiv(o, undefined, this.CSS_FIELDS);	// Need section just for fields so that they can be resized.
 	for (var i = 0; i < this.FIELDS.length; i++)
 	{
 		field = this.FIELDS[i];
@@ -393,7 +391,7 @@ EditTemplate.prototype.generate = function(criteria)
 		name = field.id;
 		value = v[name];
 
-		s = this.addDiv(o);
+		s = this.addDiv(fs);
 		e = this.addCaption(s, field.caption + (field.isRequired ? '*' : ''));
 		if (field.footnote)
 			this.addFootnote(e, field.footnote);
@@ -461,7 +459,7 @@ EditTemplate.prototype.generate = function(criteria)
 			criteria.firstField = e;
 	}
 
-	s = this.addDiv(o);
+	s = criteria.actions = this.addDiv(o, undefined, this.CSS_ACTIONS);
 	s.appendChild(this.genSubmit('submitter', 'Submit'));
 	this.addSpace(s);
 	s.appendChild(this.genButton('canceler', 'Cancel',

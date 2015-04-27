@@ -30,9 +30,11 @@ div.tabber form { border: solid 1px navy; padding-left: 5px; }
 /** div.modalShield { position: absolute; border-style: none; background-color: #99cccc; top: 0px; left: 0px; opacity: 0.5; -moz-opacity:0.5; z-index: 99; } */
 div.modalDialog { position: absolute; border: solid 3px navy; background-color: #C1DBE8; padding: 0; z-index: 100; }
 div.modalDialog form { padding: 0; margin: 0; }
+div.modalDialog form div.fields { overflow: auto; background-color: #ffffff; }
 div.modalDialog h1 { position: relative; background-color: navy; color: white; font-size: 14px; width: 100%; padding: 5px 0; margin: 0; text-indent: 5px; cursor: pointer; }
 div.modalDialog h1 a { position: absolute; right: 5px; top: 5px; color: white; font-size: 14px; font-weight: bold; text-decoration: none; }
 div.modalDialog div.close { text-align: center; }
+div.modalDialog div.actions { padding: 5px; background-color: #f0f8ff; border-top: solid 1px black; }
 
 a.dropdownList { font-weight: bold; font-size: 11pt; color: red; margin-left: 10px; text-decoration: none; outline: none; }
 span.dropdownList { display: inline-block; }
@@ -82,6 +84,7 @@ span.timestampPicker { display: inline-block; }
 .notBlocked { color: green; }
 
 form div { vertical-align: top; padding: 5px; }
-form b { display: inline-block; width: 250px; vertical-align: top; }
+form b { display: inline-block; width: 200px; vertical-align: top; }
 form b em { vertical-align: top; display: block; font-size: 8pt; font-weight: normal; padding-right: 5px; }
 form.login b { width: 120px; }
+form.client b { width: 300px; }
