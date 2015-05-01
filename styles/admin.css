@@ -43,7 +43,7 @@ div.dropdownList { position: absolute; display: none; margin: 0; padding: 5px; w
 div.dropdownList a { display: block; white-space: nowrap; text-decoration: none; padding: 3px 0; }
 div.dropdownList a:hover, div.dropdownList a.hover { background-color: #f0f8ff; }
 
-span.datePicker { display: inline-block; }
+span.datePicker { display: inline-block; position: relative; }
 input.datePicker { width: 110px; height: 22px; background: white url('/images/icon-cal.png') no-repeat 97% 4px; }
 div.datePicker { position: absolute; display: none; margin: 0; padding: 0; width: 154px; z-index: 200; background-color: white; border: solid 1px navy; }
 div.datePicker a { text-decoration: none; }

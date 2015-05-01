@@ -23,7 +23,7 @@ TimePicker.create = function(name, value, extra, callback, interval)
 	o.className = f.className = this.CSS_MAIN;
 
 	if (undefined != value)
-		h.value = value;
+		h.value = new Date(value).getTime();
 
 	f.onchange = function(ev) {
 		criteria.hidden.value = criteria.value = parseInt(this.value) * 60000;
@@ -53,7 +53,7 @@ TimePicker.getValues = function(interval)
 	values = [];
 	do
 	{
-		values[i++] = { id: min, caption: this.toCaption(min) };
+		values[i++] = { id: min, name: this.toCaption(min) };
 	} while ((min+= interval) < this.MINUTES_IN_DAY);
 
 	return this.VALUES[interval] = values;

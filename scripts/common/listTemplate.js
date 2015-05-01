@@ -486,7 +486,7 @@ ListTemplate.prototype.toggleProperty = function(criteria, elem)
 	var record = elem.myRecord;
 
 	record[elem.name] = elem.checked;
-	this.put(this.POST_URL, this.toRecord(record), function(value) {
+	this.post(this.RESOURCE, record, function(value) {
 		if (value.isError)
 		{
 			if (value[elem.name])

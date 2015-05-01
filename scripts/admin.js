@@ -1,10 +1,11 @@
 var AdminApp = new TabTemplate();
 
-AdminApp.TABS = [ { id: 'doClients', caption: 'Clients' },
+AdminApp.TABS = [ { id: 'doClients', caption: 'Clients' }, { id: 'doJobs', caption: 'Jobs' },
 	{ id: 'doUsers', caption: 'Users' }, { id: 'doApplications', caption: 'Applications' },
 	{ id: 'doLanguages', caption: 'Languages' }, { id: 'doMailTemplates', caption: 'Mail Templates' } ];
 
 AdminApp.doClients = function(body) { ClientsHandler.init(body); }
+AdminApp.doJobs = function(body) { JobsHandler.init(body); }
 AdminApp.doUsers = function(body) { UsersHandler.init(body); }
 AdminApp.doApplications = function(body) { ApplicationsHandler.init(body); }
 AdminApp.doLanguages = function(body) { LanguagesHandler.init(body); }
@@ -70,6 +71,81 @@ var ClientsHandler = new ListTemplate({
 			new DatesField('createdAt', 'Created At'),
 			new DatesField('updatedAt', 'Updated At'),
 			new ListField('pageSize', 'Page Size', false, 'pageSizeOptions', 'Number of records on the page', 'Default') ]
+	}
+});
+
+var JobsHandler = new ListTemplate({
+	NAME: 'job',
+	SINGULAR: 'Job',
+	PLURAL: 'Jobs',
+	RESOURCE: 'jobs',
+	CAN_ADD: true,
+	CAN_EDIT: true,
+	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
+	           new TextColumn('clientCode', 'Client'),
+	           new EditColumn('slug', 'Slug'),
+	           new TextColumn('localeId', 'Locale'),
+	           new EditColumn('source', 'Source'),
+	           new EditColumn('title', 'Title'),
+	           new TextColumn('active', 'Active?'),
+	           new TextColumn('postedAt', 'Posted At', 'toDateTime'),
+	           new TextColumn('createdAt', 'Created At', 'toDateTime'),
+	           new TextColumn('updatedAt', 'Updated At', 'toDateTime') ],
+	FIELDS: [ new TextField('id', 'ID'),
+	          new DropField('clientId', 'Select Client', true, 'clients', 'clientCode'),
+	          new TextField('clientCode', 'Selected Client', undefined, undefined, true),
+	          new EditField('slug', 'Slug', true, false, 128, 50),
+	          new EditField('localeId', 'Locale', true, false, 5, 5),
+	          new EditField('reqId', 'Requisition ID', false, false, 128, 50),
+	          new EditField('source', 'Source', false, false, 128, 50),
+	          new EditField('brand', 'Brand', false, false, 64, 50),
+	          new EditField('title', 'Title', true, false, 128, 50),
+	          new EditField('description', 'Description', true, true, 60, 15),
+	          new EditField('address1', 'Address 1', false, false, 128, 50),
+	          new EditField('city', 'City', false, false, 64, 50),
+	          new EditField('state', 'State', false, false, 64, 50),
+	          new EditField('country', 'Country', false, false, 64, 50),
+	          new EditField('latitude', 'Latitude', false, false, 12, 10),
+	          new EditField('longitude', 'Longitude', false, false, 12, 10),
+	          new EditField('applyUrl', 'Apply URL', false, false, 255, 50),
+	          new BoolField('active', 'Is Active?', true),
+	          new MultiField('categories', 'Categories', false, 60, 5),
+	          new MultiField('tags', 'Tags', false, 60, 5),
+	          new StampField('postedAt', 'Posted At', false),
+	          new TextField('hasQuestions', 'Has Questions?'),
+	          new TextField('questionVersion', 'Question Version'),
+	          new TextField('createdAt', 'Created At', 'toDateTime'),
+	          new TextField('updatedAt', 'Updated At', 'toDateTime') ],
+	SEARCH: {
+		NAME: 'job',
+		SINGULAR: 'Job',
+		PLURAL: 'Jobs',
+		RESOURCE: 'jobs',
+		FIELDS: [ new EditField('id', 'ID', false, false, 20, 10),
+		          new DropField('clientId', 'Select Client', false, 'clients', 'clientName'),
+		          new TextField('clientName', 'Selected Client', undefined, undefined, true),
+		          new EditField('slug', 'Slug', false, false, 128, 50),
+		          new EditField('localeId', 'Locale', false, false, 5, 5),
+		          new EditField('reqId', 'Requisition ID', false, false, 128, 50),
+		          new EditField('source', 'Source', false, false, 128, 50),
+		          new EditField('brand', 'Brand', false, false, 64, 50),
+		          new EditField('title', 'Title', false, false, 128, 50),
+		          new EditField('description', 'Description', false, false, 128, 50),
+		          new EditField('address1', 'Address 1', false, false, 128, 50),
+		          new EditField('city', 'City', false, false, 64, 50),
+		          new EditField('state', 'State', false, false, 64, 50),
+		          new EditField('country', 'Country', false, false, 64, 50),
+		          new RangeField('latitude', 'Latitude', false, 12, 10),
+		          new RangeField('longitude', 'Longitude', false, 12, 10),
+		          new EditField('applyUrl', 'Apply URL', false, false, 255, 50),
+		          new ListField('active', 'Is Active?', false, 'yesNoOptions', undefined, 'No Search'),
+		          new MultiField('includeCategories', 'Include Categories', false, 60, 5),
+		          new MultiField('excludeCategories', 'Exclude Categories', false, 60, 5),
+		          new MultiField('includeTags', 'Include Tags', false, 60, 5),
+		          new MultiField('excludeTags', 'Exclude Tags', false, 60, 5),
+		          new DatesField('postedAt', 'Posted At', false),
+		          new DatesField('createdAt', 'Created At', false),
+		          new DatesField('updatedAt', 'Updated At', false) ]
 	}
 });
 

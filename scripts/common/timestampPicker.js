@@ -10,16 +10,16 @@ TimestampPicker.create = function(name, value, extra, callback, interval)
 	o.className = this.CSS_MAIN;
 
 	if (undefined != value)
-		h.value = value;
+		h.value = new Date(value).getTime();
 
-	criteria.dateCallback = { doSelect: function(c) {
-		var b, a = new Date(c.value);
+	criteria.dateCallback = { doSelect: function(c, v) {
+		var b;
 		if (undefined == criteria.value)
-			b = new Date(a.getFullYear(), a.getMonth(), a.getDate());
+			b = new Date(v.getFullYear(), v.getMonth(), v.getDate());
 		else
 		{
 			b = new Date(criteria.value);
-			b.setFullYear(a.getFullYear(), a.getMonth(), a.getDate());
+			b.setFullYear(v.getFullYear(), v.getMonth(), v.getDate());
 		}
 
 		criteria.hidden.value = criteria.value = b.getTime();

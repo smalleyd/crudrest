@@ -301,7 +301,6 @@ EditTemplate.prototype.populate = function(criteria, form)
 		if (!elem)
 			continue;
 
-
 		// Special handling for a list of checkboxes.
 		if (field.isPickable)
 		{
@@ -323,6 +322,11 @@ EditTemplate.prototype.populate = function(criteria, form)
 			value[name] = this.encodeHTML(elem.value); // To ensure that non-ASCII characters display.
 		else if (field.isTagger)
 			value[name] = field.widget.retrieve(criteria.texts[name]).selectedIds;
+		else if (field.isDate || field.isTime || field.isTimestamp)
+		{
+			if ('' != elem.value)
+				value[name] = parseInt(elem.value);
+		}
 		else
 			value[name] = elem.value;
 	}

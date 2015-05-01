@@ -19,7 +19,7 @@ DatePicker.create = function(name, value, extra, callback)
 	// DO full UNDEFINED test since it could be ZERO.
 	if (undefined != value)
 	{
-		h.value = value;
+		h.value = new Date(value).getTime();
 		f.value = this.toInputDate(value);
 	}
 
@@ -146,7 +146,7 @@ DatePicker.select = function(c, d)
 
 	var cb = c.callback;
 	if (cb && cb.doSelect)
-		cb.doSelect(c);
+		cb.doSelect(c, d);
 
 	this.close(c);
 }
@@ -222,7 +222,15 @@ DatePicker.toInputDate_ = function(value)
 
 DatePicker.toDbDate = function(value)
 {
-	return value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
+	return value.getFullYear() + '-' + this.padInt(value.getMonth() + 1) + '-' + this.padInt(value.getDate()) + "T00:00:00+0000"
+}
+
+DatePicker.padInt = function(value)
+{
+	if (10 > value)
+		return '0' + value;
+
+	return value;
 }
 
 DatePicker.parseInputDate = function(v)
@@ -273,6 +281,11 @@ DatePicker.parseInputDate = function(v)
 /** Need to convert the format YYYY-MM-DD to a JavaScript Date object. */
 DatePicker.parseDbDate = function(v)
 {
+	var v = new Date(v);
+	v.setHours(0, 0, 0, 0);
+
+	return v;
+	/*
 	var m, d, y, f = v.split('-', 3);
 	if (3 > f.length)
 		throw 'Invalid DB date: must contain 3 parts separated by a hyphen.';
@@ -287,6 +300,7 @@ DatePicker.parseDbDate = function(v)
 		throw 'Invalid DB date: the date (' + f[2] + ') is not a number.';
 
 	return new Date(y, m - 1, d, 0, 0, 0, 0);
+	*/
 }
 
 /** Remove preceding zero's used for date and month padding from the DB. Need to remove
