@@ -276,7 +276,8 @@ var DocumentsHandler = new ListTemplate({
 	SINGULAR: 'Document',
 	PLURAL: 'Documents',
 	RESOURCE: 'documents',
-	COLUMNS: [ new TextColumn('id', 'ID'),
+	CAN_EDIT: true,
+	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
 	           new TextColumn('userId', 'User'),
 	           new TextColumn('file_name', 'File'),
 	           new TextColumn('type', 'Type'),
@@ -287,6 +288,20 @@ var DocumentsHandler = new ListTemplate({
 	           new TextColumn('uploaded', 'Uploaded?'),
 	           new TextColumn('uploadedAt', 'Uploaded At', 'toDateTime'),
 	           new TextColumn('createdAt', 'Created At', 'toDateTime') ],
+	FIELDS: [ new TextField('id', 'ID'),
+	          new TextField('userId', 'User ID'),
+	          new EditField('file_name', 'File Name', true, false, 512, 50),
+	          new ListField('type', 'Type', true, 'documentTypesX'),
+	          new EditField('emailIdentifier', 'Email Identifier', false, false, 255, 50),
+	          new DropField('languageId', 'Select Language', false, 'languages', 'languageName'),
+	          new TextField('languageName', 'Selected Language', undefined, undefined, true),
+	          new ListField('source', 'Source', true, 'documentSources'),
+	          new EditField('mimeType', 'MIME Type', false, false, 255, 50),
+	          new EditField('size', 'Size', false, false, 20, 10),
+	          new BoolField('uploaded', 'Is Uploaded?', true),
+	          new TextField('uploadedAt', 'Uploaded At', 'toDateTime'),
+	          new TextField('createdAt', 'Created At', 'toDateTime'),
+	          new TextField('updatedAt', 'Updated At', 'toDateTime') ],
 	SEARCH: {
 		NAME: 'document',
 		SINGULAR: 'Document',
@@ -308,7 +323,9 @@ var DocumentsHandler = new ListTemplate({
 		          new DatesField('createdAt', 'Created At'),
 		          new DatesField('updatedAt', 'Updated At'),
 		          new ListField('pageSize', 'Page Size', false, 'pageSizes', 'Number of records on the page') ]
-	}
+	},
+
+	post: function(url, filter, handler) { this.put(url, filter, handler); }	// For Documents the PUT does the update. DLS on 5/15/2015.
 });
 
 var LanguagesHandler = new ListTemplate({

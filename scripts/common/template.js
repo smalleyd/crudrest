@@ -8,6 +8,7 @@ Template.prototype.GIGA = 1024 * 1024 * 1024;
 
 Template.prototype.LISTS = { documentSources: [ { id: 'dropbox', name: 'DropBox' }, { id: 'email', name: 'Email' }, { id: 'googledocs', name: 'Google Drive' }, { id: 'linkedin', name: 'LinkedIn' }, { id: 'user', name: 'Text Submission' }, { id: 'user_file', name: 'File Upload' } ],
                              documentTypes: [ { id: 'A', name: 'All' }, { id: 'C', name: 'Cover Letter' }, { id: 'O', name: 'Other' }, { id: 'R', name: 'Resume' } ],
+                             documentTypesX: [ { id: 'all', name: 'All' }, { id: 'cover_letter', name: 'Cover Letter' }, { id: 'other', name: 'Other' }, { id: 'resume', name: 'Resume' } ],
                              yesNoOptions: [ { id: 'true', name: 'Yes' }, { id: 'false', name: 'No' } ],
                              pageSizes: [ { id: 10, name: '10' }, { id: 20, name: '20' }, { id: 50, name: '50' }, { id: 100, name: '100' } ] };
 
