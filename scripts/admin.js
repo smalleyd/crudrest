@@ -2,12 +2,14 @@ var AdminApp = new TabTemplate();
 
 AdminApp.TABS = [ { id: 'doClients', caption: 'Clients' }, { id: 'doJobs', caption: 'Jobs' },
 	{ id: 'doUsers', caption: 'Users' }, { id: 'doApplications', caption: 'Applications' },
+	{ id: 'doDocuments', caption: 'Documents' },
 	{ id: 'doLanguages', caption: 'Languages' }, { id: 'doMailTemplates', caption: 'Mail Templates' } ];
 
 AdminApp.doClients = function(body) { ClientsHandler.init(body); }
 AdminApp.doJobs = function(body) { JobsHandler.init(body); }
 AdminApp.doUsers = function(body) { UsersHandler.init(body); }
 AdminApp.doApplications = function(body) { ApplicationsHandler.init(body); }
+AdminApp.doDocuments = function(body) { DocumentsHandler.init(body); }
 AdminApp.doLanguages = function(body) { LanguagesHandler.init(body); }
 AdminApp.doMailTemplates = function(body) { MailTemplatesHandler.init(body); }
 
@@ -263,6 +265,46 @@ var ApplicationsHandler = new ListTemplate({
 		          new EditField('metadataSource', 'Metadata Source', false, false, 255, 50),
 		          new DatesField('completedAt', 'Completed At'),
 		          new DatesField('lastAnswerAt', 'Last Answer At'),
+		          new DatesField('createdAt', 'Created At'),
+		          new DatesField('updatedAt', 'Updated At'),
+		          new ListField('pageSize', 'Page Size', false, 'pageSizes', 'Number of records on the page') ]
+	}
+});
+
+var DocumentsHandler = new ListTemplate({
+	NAME: 'document',
+	SINGULAR: 'Document',
+	PLURAL: 'Documents',
+	RESOURCE: 'documents',
+	COLUMNS: [ new TextColumn('id', 'ID'),
+	           new TextColumn('userId', 'User'),
+	           new TextColumn('file_name', 'File'),
+	           new TextColumn('type', 'Type'),
+	           new TextColumn('emailIdentifier', 'Email'),
+	           new TextColumn('source', 'Source'),
+	           new TextColumn('mimeType', 'MIME Type'),
+	           new TextColumn('size', 'Size', 'toSize'),
+	           new TextColumn('uploaded', 'Uploaded?'),
+	           new TextColumn('uploadedAt', 'Uploaded At', 'toDateTime'),
+	           new TextColumn('createdAt', 'Created At', 'toDateTime') ],
+	SEARCH: {
+		NAME: 'document',
+		SINGULAR: 'Document',
+		PLURAL: 'Documents',
+		RESOURCE: 'documents',
+		FIELDS: [ new EditField('id', 'ID', false, false, 20, 10),
+		          new DropField('clientId', 'Select Client', false, 'clients', 'clientName'),
+		          new TextField('clientName', 'Selected Client', undefined, undefined, true),
+		          new EditField('fileName', 'File Name', false, false, 255, 50),
+		          new ListField('typeId', 'Type', false, 'documentTypes', undefined, 'No Search'),
+		          new EditField('emailIdentifier', 'Email Identifier', false, false, 255, 50),
+		          new DropField('languageId', 'Select Language', false, 'languages', 'languageName'),
+		          new TextField('languageName', 'Selected Language', undefined, undefined, true),
+		          new ListField('source', 'Source', false, 'documentSources', undefined, 'No Search'),
+		          new EditField('mimeType', 'MIME Type', false, false, 255, 50),
+		          new RangeField('size', 'Size', false, 20, 10),
+		          new ListField('uploaded', 'Is Uploaded?', false, 'yesNoOptions', undefined, 'No Search'),
+		          new DatesField('uploadedAt', 'Uploaded At'),
 		          new DatesField('createdAt', 'Created At'),
 		          new DatesField('updatedAt', 'Updated At'),
 		          new ListField('pageSize', 'Page Size', false, 'pageSizes', 'Number of records on the page') ]
