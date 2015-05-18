@@ -218,6 +218,8 @@ EditTemplate.prototype.doAdd = function(callback, body, value) { this.run({ valu
 EditTemplate.prototype.doEdit = function(id, callback, body) { this.run({ callback: callback, url: this.RESOURCE + '/' + id }, body, 'get'); }
 EditTemplate.prototype.doSearch = function(callback, body, filter) { this.run({ value: {}, filter: (filter ? filter : { isSearch: true, isAdd: false, pageSize: 20 }), callback: callback }, body); }
 
+EditTemplate.prototype.EDIT_METHOD = 'post';
+
 EditTemplate.prototype.onPostLoad = function(criteria)
 {
 	if (criteria.isModal)
@@ -249,7 +251,7 @@ EditTemplate.prototype.handleSubmit = function(criteria, form)
 	}
 
 	var me = this;
-	this.post(this.RESOURCE, criteria.value, function(v) {
+	this[this.EDIT_METHOD](this.RESOURCE, criteria.value, function(v) {
 		me.processResponse(v, criteria, form);
 	});
 }

@@ -214,6 +214,13 @@ var ApplicationsHandler = new ListTemplate({
 	PLURAL: 'Applications',
 	RESOURCE: 'applications',
 	CAN_EDIT: true,
+
+	ROW_ACTIONS: [ new RowAction('openDocuments', 'Documents') ],
+
+	openDocuments: function(criteria, elem) {
+		DocumentsHandler.filter({ applicationId: elem.myRecord.id });
+	},
+
 	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
 	           new TextColumn('clientName', 'Client'),
 	           new TextColumn('user_id', 'User'),
@@ -277,6 +284,7 @@ var DocumentsHandler = new ListTemplate({
 	PLURAL: 'Documents',
 	RESOURCE: 'documents',
 	CAN_EDIT: true,
+	EDIT_METHOD: 'put',
 	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
 	           new TextColumn('userId', 'User'),
 	           new TextColumn('file_name', 'File'),
@@ -323,9 +331,7 @@ var DocumentsHandler = new ListTemplate({
 		          new DatesField('createdAt', 'Created At'),
 		          new DatesField('updatedAt', 'Updated At'),
 		          new ListField('pageSize', 'Page Size', false, 'pageSizes', 'Number of records on the page') ]
-	}/*,
-
-	post: function(url, filter, handler) { this.put(url, filter, handler); }	// For Documents the PUT does the update. DLS on 5/15/2015. */
+	}
 });
 
 var LanguagesHandler = new ListTemplate({
