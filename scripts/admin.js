@@ -329,6 +329,34 @@ var DocumentsHandler = new ListTemplate({
 		FIELDS: [ new EditField('id', 'ID', false, false, 20, 10),
 		          new DropField('clientId', 'Select Client', false, 'clients', 'clientName'),
 		          new TextField('clientName', 'Selected Client', undefined, undefined, true),
+		          new DropField('userId', 'Select User', false, function(c) {
+		        	  var id = c.extra.form.clientId.value;
+		        	  if ('' == id)
+		        	  {
+		        		  window.alert('Please select a client first.');
+		        		  DropdownList.focus(c.extra.form, 'clientId');
+		        		  return;
+		        	  }
+
+		        	  Template.get('clients/' + id + '/users/find', { name: c.field.value }, function(data) {
+		        		  c.caller.fill(c, data);
+		        	  });
+		          }, 'userName'),
+		          new TextField('userName', 'Selected User', undefined, undefined, true),
+		          new DropField('jobId', 'Select Job', false, function(c) {
+		        	  var id = c.extra.form.clientId.value;
+		        	  if ('' == id)
+		        	  {
+		        		  window.alert('Please select a client first.');
+		        		  DropdownList.focus(c.extra.form, 'clientId');
+		        		  return;
+		        	  }
+
+		        	  Template.get('clients/' + id + '/jobs/find', { name: c.field.value }, function(data) {
+		        		  c.caller.fill(c, data);
+		        	  });
+		          }, 'jobName'),
+		          new TextField('jobName', 'Selected Job', undefined, undefined, true),
 		          new EditField('fileName', 'File Name', false, false, 255, 50),
 		          new ListField('typeId', 'Type', false, 'documentTypes', undefined, 'No Search'),
 		          new EditField('emailIdentifier', 'Email Identifier', false, false, 255, 50),

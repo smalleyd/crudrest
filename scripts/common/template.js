@@ -543,6 +543,12 @@ Template.prototype.genInput = Template.genInput = function(name, type, checked)
 	o.type = type;
 	o.checked = checked;
 
+	// For enabling & disabling the field plus it's caption.
+	o.setFieldStatus = function(b) {
+		this.disabled = !b;
+		this.previousSibling.className = (b ? '' : 'disabled');
+	};
+
 	return o;
 }
 
@@ -653,6 +659,12 @@ Template.prototype.genSelect = Template.genSelect = function(name, options, valu
 	if (value)
 		o.value = value;
 
+	// For enabling & disabling the field plus it's caption.
+	o.setFieldStatus = function(b) {
+		this.disabled = !b;
+		this.previousSibling.className = (b ? '' : 'disabled');
+	};
+
 	return o;
 }
 
@@ -691,7 +703,7 @@ Template.prototype.genTextBox = function(name, maxLength, size)
 	return o;
 }
 
-Template.prototype.genTextArea = function(name, cols, rows)
+Template.prototype.genTextArea = function(name, cols, rows, value)
 {
 	var o;
 	if (document.all)
@@ -704,6 +716,13 @@ Template.prototype.genTextArea = function(name, cols, rows)
 
 	if (cols) o.cols = cols;
 	if (rows) o.rows = rows;
+    if (undefined != value) o.value = value;
+
+	// For enabling & disabling the field plus it's caption.
+	o.setFieldStatus = function(b) {
+		this.disabled = !b;
+		this.previousSibling.className = (b ? '' : 'disabled');
+	};
 
 	return o;
 }

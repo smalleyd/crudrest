@@ -196,6 +196,47 @@ DropdownList.moveTo = function(c, index)
 	this.open(c);
 }
 
+/** Set the field to empty or deselected. */
+DropdownList.clear = function(form, name)
+{
+	var e;
+	if (e = form.elements[name])
+		e.value = '';
+	if (e = form.elements[name + this.SUFFIX])
+		e.value = '';
+}
+
+DropdownList.enable = function(form, name)
+{
+	var e;
+	if (e = form.elements[name])
+		e.setFieldStatus(true);
+	if (e = form.elements[name + this.SUFFIX])
+		e.disabled = false;
+}
+
+DropdownList.disable = function(form, name)
+{
+	var e;
+	if (e = form.elements[name])
+	{
+		e.value = '';
+		e.setFieldStatus(false);
+	}
+	if (e = form.elements[name + this.SUFFIX])
+	{
+		e.value = '';
+		e.disabled = true;
+	}
+}
+
+DropdownList.focus = function(form, name)
+{
+	var e;
+	if (e = form.elements[name + this.SUFFIX])
+		e.focus();
+}
+
 DropdownList.genInput = Template.prototype.genInput;
 DropdownList.createAnchor = Template.prototype.createAnchor;
 DropdownList.toCaption = function(v) { return v.name + ' (' + v.id + ')'; }

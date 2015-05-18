@@ -198,7 +198,7 @@ ListTemplate.prototype.createNoRecordsFoundMessage = function(criteria)
 
 ListTemplate.prototype.appendHeader = function(criteria, table)
 {
-	var r, o = table.createTHead();
+	var r, o = criteria.thead = table.createTHead();
 	var c, cols = this.COLUMNS;
 
 	this.insertPaging(table, o, criteria);
@@ -221,7 +221,7 @@ ListTemplate.prototype.appendBody = function(criteria, table)
 {
 	var a, text, cell, c, cols = this.COLUMNS;
 	var record, records = criteria.value.records;
-	var e, v, r, o = document.createElement('tbody');
+	var e, v, r, o = criteria.tbody = document.createElement('tbody');
 
 	table.appendChild(o);
 
