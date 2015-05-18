@@ -221,6 +221,11 @@ var ApplicationsHandler = new ListTemplate({
 		DocumentsHandler.filter({ applicationId: elem.myRecord.id });
 	},
 
+	// Can't update application so disable the checkboxes on the list.
+	onListPostLoad: function(criteria) {
+		$('input[type=checkbox]', criteria.body).attr('disabled', true);
+	},
+
 	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
 	           new TextColumn('clientName', 'Client'),
 	           new TextColumn('user_id', 'User'),
@@ -285,6 +290,12 @@ var DocumentsHandler = new ListTemplate({
 	RESOURCE: 'documents',
 	CAN_EDIT: true,
 	EDIT_METHOD: 'put',
+
+	// Can't update application so disable the checkboxes on the list.
+	onListPostLoad: function(criteria) {
+		$('input[type=checkbox]', criteria.body).attr('disabled', true);
+	},
+
 	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
 	           new TextColumn('userId', 'User'),
 	           new TextColumn('file_name', 'File'),

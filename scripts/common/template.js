@@ -83,13 +83,25 @@ Template.prototype.run = function(criteria, body, method)
 Template.prototype.display = function(criteria, value)
 {
 	criteria.body.empty();
+	var me = this;
+	var isModal = criteria.isModal;
+	if (isModal)
+	{
+		var e = criteria.header = this.createHeader();
+		this.addSpan(e, this.getTitle(criteria));       // Put within SPAN within H1 so that it doesn't overlap the close anchor.
+		criteria.body.append($(e));
+		e.appendChild(this.createAnchor('X',
+			function(ev) { me.handleCancel(criteria); }));
+
+		this.makeElementDraggable(criteria, e);
+	}
 	criteria.value = value;
 	criteria.body.append($(this.generate(criteria)));
 
 	if (this.onPostLoad)
 		this.onPostLoad(criteria);
 
-	if (criteria.isModal)
+	if (isModal)
 		criteria.body.center();
 }
 
@@ -195,7 +207,7 @@ Template.prototype.createAnchor = Template.createAnchor = function(caption, acti
 	var t = typeof(caption);
 	if (('string' == t) || ('number' == t))
 		o.innerHTML = caption;
-	else
+	else if (undefined != caption)
 		o.appendChild(caption);
 
 	if (css)
@@ -222,6 +234,7 @@ Template.prototype.createLink = Template.createLink = function(caption, href, cs
 }
 
 Template.prototype.createDiv = function(value, css) { return this.createElement('div', value, css); }
+Template.prototype.createHeader = function(value, css) { return this.createElement('h1', value, css); }
 Template.prototype.createSpan = function(value, css) { return this.createElement('span', value, css); }
 Template.prototype.createElement = Template.createElement = function(name, value, css)
 {
@@ -711,6 +724,37 @@ Template.prototype.encodeHTML = Template.encodeHTML = function(value)
 		else
 			o+= value.charAt(i);
 	}
+
+	return o;
+}
+
+Template.prototype.getLocation = Template.getLocation = function(elem)
+{
+	return $(elem).offset();
+}
+
+Template.prototype.getLocationBelow = Template.getLocationBelow = function(elem)
+{
+	var o = (elem = $(elem)).offset();
+	o.top+= elem.outerHeight();
+
+	return o;
+}
+
+Template.prototype.getLocationRightBottom = Template.getLocationRightBottom = function(elem)
+{
+	var o = (elem = $(elem)).offset();
+	o.top+= elem.outerHeight();
+	o.right = o.left + elem.outerWidth();
+
+	return o;
+}
+
+Template.prototype.getLocationRightTop = Template.getLocationRightTop = function(elem)
+{
+	var o = (elem = $(elem)).offset();
+	o.right = o.left + elem.outerWidth();
+	o.bottom = o.top + elem.outerHeight();
 
 	return o;
 }

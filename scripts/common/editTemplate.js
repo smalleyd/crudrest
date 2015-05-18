@@ -220,6 +220,20 @@ EditTemplate.prototype.doSearch = function(callback, body, filter) { this.run({ 
 
 EditTemplate.prototype.EDIT_METHOD = 'post';
 
+/** Used to set the title bar caption for modal dialogs. */
+EditTemplate.prototype.getTitle = function(criteria)
+{
+	var f = criteria.filter;
+	if (undefined == f)
+		f = {};
+
+	var p, v = (f.isSearch ? 'Search ' + this.PLURAL : ((f.isAdd ? 'Add' : 'Edit') + ' ' + this.SINGULAR));
+	if (p = criteria.parent)
+		v+= ': ' + p.name;
+
+	return v;
+}
+
 EditTemplate.prototype.onPostLoad = function(criteria)
 {
 	if (criteria.isModal)
@@ -375,14 +389,8 @@ EditTemplate.prototype.generate = function(criteria)
 		};
 	}
 
-	e = criteria.header = this.addHeader(o, (f.isSearch ? 'Search ' + this.PLURAL : ((isAdd ? 'Add' : 'Edit') + ' ' + this.SINGULAR)));
-	if (isModal)
-	{
-		e.appendChild(this.createAnchor('X',
-			function(ev) { me.handleCancel(criteria); }));
-
-		this.makeElementDraggable(criteria, e);
-	}
+	if (!isModal)
+		criteria.header = this.addHeader(o, (f.isSearch ? 'Search ' + this.PLURAL : ((isAdd ? 'Add' : 'Edit') + ' ' + this.SINGULAR)));
 
 	var tx = criteria.texts = {}; // For keeping references to the text fields.
 	var fs = criteria.fields = this.addDiv(o, undefined, this.CSS_FIELDS);	// Need section just for fields so that they can be resized.

@@ -16,6 +16,7 @@ thead td a:hover, tfoot td a:hover { text-decoration: underline; }
 thead td a.action, tfoot td a.action, th a.action { text-transform: uppercase; margin-left: 15px; }
 th, td { border: solid 1px navy; padding: 5px; }
 td.odd { background-color: #C1DBE8; }
+td.even { background-color: white; }
 td.right { text-align: right; }
 td.center { text-align: center; }
 td.highlight { background-color: navy; color: white; }
@@ -26,12 +27,17 @@ div.tabber div.tabs a { display: inline-block; margin-right: 10px; text-decorati
 div.tabber div.tabs a.selected { background-color: navy; color: white; }
 div.tabber div.tabs a:hover { background-color: #C1DBE8; }
 div.tabber form { border: solid 1px navy; padding-left: 5px; }
+div.tabberDropdown { display: none; position: absolute; z-index: 170; background-color: white; border: solid 1px black; }
+div.tabberDropdown a { display: block; border-bottom: solid 1px black; padding: 6px; text-decoration: none; }
+div.tabberDropdown a:last-child { border-bottom: none; }
+div.tabberDropdown a:hover { background-color: #CCCCCC; }
 
 /** div.modalShield { position: absolute; border-style: none; background-color: #99cccc; top: 0px; left: 0px; opacity: 0.5; -moz-opacity:0.5; z-index: 99; } */
 div.modalDialog { position: absolute; border: solid 3px navy; background-color: #C1DBE8; padding: 0; z-index: 100; }
 div.modalDialog form { padding: 0; margin: 0; }
 div.modalDialog form div.fields { overflow: auto; background-color: #ffffff; }
 div.modalDialog h1 { position: relative; background-color: navy; color: white; font-size: 14px; width: 100%; padding: 5px 0; margin: 0; text-indent: 5px; cursor: pointer; }
+div.modalDialog h1 span { background-color: navy; color: white; font-size: 14px; margin-right: 25px; cursor: pointer; } /* Make sure to not overlap the close anchor. */
 div.modalDialog h1 a { position: absolute; right: 5px; top: 5px; color: white; font-size: 14px; font-weight: bold; text-decoration: none; }
 div.modalDialog div.close { text-align: center; }
 div.modalDialog div.actions { padding: 5px; background-color: #f0f8ff; border-top: solid 1px black; }
@@ -82,6 +88,9 @@ span.timestampPicker { display: inline-block; }
 
 .blocked { color: red; }
 .notBlocked { color: green; }
+
+a.config { text-decoration: none; }
+a.config:before { content: "\273F"; font-size: 16pt; margin: 0 3px 0 5px; }
 
 form div { vertical-align: top; padding: 5px; }
 form b { display: inline-block; width: 200px; vertical-align: top; }

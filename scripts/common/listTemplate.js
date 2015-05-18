@@ -80,6 +80,61 @@ ListTemplate.prototype = new Template();
 ListTemplate.prototype.init = function(body) { return this.filter({}, body); }
 ListTemplate.prototype.filter = function(filter, body) { return this.run({ filter: filter, url: this.SEARCH_PATH }, body, this.SEARCH_METHOD); }
 
+ListTemplate.prototype.getTitle = function(criteria)
+{
+	if (criteria.parent)
+		return this.PARENT + ' ' + this.PLURAL + ': ' + criteria.parent.name;
+	
+	return this.PLURAL;
+}
+
+ListTemplate.prototype.onPostLoad = function(criteria)
+{
+	if (criteria.isModal)
+	{
+		var w = $(window);
+		var b = criteria.body;
+		if (b.height() > w.height())
+		{
+			var tb = criteria.tbody;
+			
+			// Before resizing the tbody, get the widths of their cells.
+			var rows = tb.rows;
+			var bCells = rows[0].cells;
+			var cells = [];
+			for (var i = 0; i < bCells.length; i++)
+				bCells[i].style.width = (cells[i] = bCells[i].clientWidth) + 'px';
+			
+			for (var i = 1; i < rows.length; i++)
+			{
+				bCells = rows[i].cells;
+				for (var j = 0; j < cells.length; j++)
+					bCells[j].style.width = cells[j] + 'px';
+			}
+			
+			// Resize the tbody.
+			var offset = (b.height() - tb.offsetHeight) + 25;
+			tb.style.height = (w.height() - offset) + 'px';
+			tb.className = this.CSS_MODAL;
+			criteria.table.style.display = 'inline';
+			
+			// Now have to fix the widths of the head columns.
+			var hCells = criteria.thead.rows[1].cells;
+			for (var i = 0; i < cells.length; i++)
+				hCells[i].style.width = cells[i] + 'px';
+		}
+	}
+	
+	if (this.onListPostLoad)
+	        this.onListPostLoad(criteria);
+}
+
+ListTemplate.prototype.handleCancel = function(criteria)
+{
+	if (criteria.isModal)
+		criteria.body.closeMe();
+}
+
 ListTemplate.prototype.doPaging = function(criteria, elem)
 {
 	criteria.filter.page = elem.nextPage;
@@ -199,24 +254,25 @@ ListTemplate.prototype.appendBody = function(criteria, table)
 				this.decorateOpenChildAnchor(a, record);
 			}
 
-			// Custom row actions.
-			if (this.ROW_ACTIONS)
+            this.addSpace(e);
+
+			if (this.HAS_HISTORY)
 			{
-				for (var j = 0; j < this.ROW_ACTIONS.length; j++)
-				{
-					var act = this.ROW_ACTIONS[j];
-
-					// If a record condition is specified, exit if NOT met.
-					if (act.condition && !record[act.condition])
-						continue;
-
-					this.addSpace(e);
-					e.appendChild(a = this.createAnchor(act.caption,
-						function(ev) { me[this.myId](criteria, this); }, act.css));
-					a.myRecord = record;
-					a.myId = act.id;
-				}
+				e.appendChild(a = this.createAnchor(undefined, function(ev) {
+					me.HISTORY_VIEWER.open(this.myRecord);
+				}, 'history','History'));
+				a.myRecord = record;
 			}
+
+            // Custom row actions.
+            if (this.ROW_ACTIONS)
+            {
+				e.appendChild(a = this.createAnchor(undefined, function(ev) {
+					return false; }, 'config'));
+				a.myRecord = record;
+				a.onmouseover = function(ev) { me.openActionsMenu(criteria, this); };
+				a.onmouseout = function(ev) { me.closeActionsMenuSoon(criteria, this); };
+            }
 		}
 
 		for (var j = 0; j < cols.length; j++)
@@ -277,6 +333,96 @@ ListTemplate.prototype.appendBody = function(criteria, table)
 	}
 
 	return o;
+}
+
+ListTemplate.prototype.openActionsMenu = function(criteria, elem)
+{
+	// Keep open if back over the option.
+	this.clearMenuClose(elem);
+	
+	// Already open?
+	if (elem.myMenu)
+		return;
+	
+	var me = this;
+	var record = elem.myRecord;
+	var a, b, act, o = elem.myMenu = document.createElement('div');
+	o.className = 'tabberDropdown';
+	(b = document.body).insertBefore(o, b.firstChild);
+	
+	for (var i = 0; i < this.ROW_ACTIONS.length; i++)
+	{
+		act = this.ROW_ACTIONS[i];
+		
+		// If a record condition is specified, exit if NOT met.
+		if (act.condition && !record[act.condition])
+			continue;
+		
+		o.appendChild(a = this.createAnchor(act.caption, function(ev) {
+			me[this.myId](criteria, this);
+			me.closeActionsMenu(criteria, elem);
+		}));
+		a.myRecord = record;
+		a.myId = act.id;
+		a.onmouseover = function(ev) { me.clearMenuClose(elem); };
+		a.onmouseout = function(ev) { me.closeActionsMenuSoon(criteria, elem); };
+	}
+
+	var s = o.style;
+	var coords = this.getLocationRightTop(elem);
+	s.display = 'block';
+
+	// If past halfway on the screen, then display from the bottom up.
+	var w = $(window);
+	if ((w.height() / 2) < (coords.top - w.scrollTop()))
+	{
+		var top = (coords.bottom - $(o).outerHeight());
+		if (top < w.scrollTop())        // Make sure not past top.
+			top = w.scrollTop();
+		s.top = top + 'px';
+	}
+	else
+	{
+		// Make sure not past bottom.
+		var bottom = (coords.top + $(o).outerHeight());
+		if (bottom > (w.height() + w.scrollTop()))
+			coords.top-= (bottom - (w.height() + w.scrollTop()));
+		s.top = coords.top + 'px';
+	}
+	s.left = coords.right + 'px';
+}
+
+ListTemplate.prototype.clearMenuClose = function(elem)
+{
+	if (elem.myMenuCloseId)
+	{
+		window.clearTimeout(elem.myMenuCloseId);
+		delete elem.myMenuCloseId;
+	}
+}
+
+ListTemplate.prototype.closeActionsMenu = function(criteria, elem)
+{
+	// Do NOT need to worry about myMenuCloseId because we are over the menu item.
+	document.body.removeChild(elem.myMenu);
+	delete elem.myMenu;
+}
+
+ListTemplate.prototype.closeActionsMenuSoon = function(criteria, elem)
+{
+	// Already closed?
+	if (!elem.myMenu)
+		return;
+	
+	// Close it in a half a second.
+	elem.myMenuCloseId = window.setTimeout(function() {
+		if (elem.myMenu && elem.myMenuCloseId)
+		{
+			document.body.removeChild(elem.myMenu);
+			delete elem.myMenu;
+			delete elem.myMenuCloseId;
+		}
+	}, 500);
 }
 
 ListTemplate.prototype.insertRow = function(table)
