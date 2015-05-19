@@ -170,7 +170,7 @@ ListTemplate.prototype.generate = function(criteria)
 	if (!records || (0 == records.length))
 		return this.createNoRecordsFoundMessage(criteria);
 
-	var e, r, c, o = document.createElement('table');
+	var e, r, c, o = criteria.table = document.createElement('table');
 	this.appendHeader(criteria, o);
 	this.appendBody(criteria, o);
 
@@ -436,7 +436,7 @@ ListTemplate.prototype.insertRow = function(table)
 ListTemplate.prototype.insertPaging = function(table, header, criteria)
 {
 	this.insertPaging_(header, criteria);
-	this.insertPaging_(table.createTFoot(), criteria);
+	this.insertPaging_(criteria.tfoot = table.createTFoot(), criteria);
 }
 
 ListTemplate.prototype.insertPaging_ = function(section, criteria)

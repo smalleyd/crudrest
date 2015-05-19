@@ -13,9 +13,21 @@ Template.prototype.LISTS = { documentSources: [ { id: 'dropbox', name: 'DropBox'
                              pageSizes: [ { id: 10, name: '10' }, { id: 20, name: '20' }, { id: 50, name: '50' }, { id: 100, name: '100' } ] };
 
 Template.prototype.REGEX_NEW_LINE = /[\n]+/;
+Template.prototype.REGEX_PATH_PREFIX = /\/$/;   // Determine if a URL ends with the path separator.
+Template.prototype.REGEX_WHITESPACE = /[\s]+/g;
 
 Template.prototype.CSS_ACTIONS = 'actions';
 Template.prototype.CSS_FIELDS = 'fields';
+Template.prototype.CSS_MODAL = 'modal';
+
+Template.prototype.CAPTION_ADD = 'Add';
+Template.prototype.CAPTION_BACK = 'Back';
+Template.prototype.CAPTION_CANCEL = 'Cancel';
+Template.prototype.CAPTION_CLOSE = 'Close';
+Template.prototype.CAPTION_IMPORT = 'Import';
+Template.prototype.CAPTION_PREVIEW = 'Preview';
+Template.prototype.CAPTION_REMOVE = 'Remove';
+Template.prototype.CAPTION_SUBMIT = 'Submit';
 
 Template.prototype.load = function(properties)
 {
@@ -38,7 +50,11 @@ Template.prototype.run = function(criteria, body, method)
 
 	// If no BODY exists at all, create a modal dialog.
 	// Do NOT include an ELSE section to set "criteria.isModal = false" because the modal body could already exist.
-	if (criteria.isModal = (undefined == criteria.body))
+	// Only set the isModal if undefined. For table/list modals the "run" method can be called multiple times as sorts & pages change.
+	if (undefined == criteria.isModal)
+		criteria.isModal = (undefined == criteria.body);
+
+	if (criteria.isModal)
 	{
 		var b = document.body;
 		b.insertBefore(body = this.createDiv('Loading ...', 'modalDialog'), b.firstChild);

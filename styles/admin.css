@@ -10,6 +10,7 @@
 table { border-collapse: collapse; min-width: 1000px; }
 div.noRecordsFound { width: 1000px; border: solid 1px navy; margin: 0; padding: 10px 5px; }
 div.noRecordsFound a { display: block; margin-top: 10px; }
+tbody.modal { display: block; overflow: auto; }
 thead td, tfoot td, th { background-color: navy; color: white; white-space: nowrap; vertical-align: bottom; }
 thead td a, tfoot td a, th a { color: white; text-decoration: none; }
 thead td a:hover, tfoot td a:hover { text-decoration: underline; }

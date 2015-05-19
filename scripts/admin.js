@@ -83,6 +83,10 @@ var JobsHandler = new ListTemplate({
 	RESOURCE: 'jobs',
 	CAN_ADD: true,
 	CAN_EDIT: true,
+
+	ROW_ACTIONS: [ new RowAction('openApplications', 'Applications') ],
+	openApplications: function(c, e) { ApplicationsHandler.filter({ userId: e.myRecord.identifier }); },
+
 	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
 	           new TextColumn('clientCode', 'Client'),
 	           new EditColumn('slug', 'Slug'),
@@ -158,6 +162,13 @@ var UsersHandler = new ListTemplate({
 	RESOURCE: 'users',
 	CAN_ADD: true,
 	CAN_EDIT: true,
+
+	ROW_ACTIONS: [ new RowAction('openApplications', 'Applications'),
+	               new RowAction('openDocuments', 'Documents') ],
+
+	openApplications: function(c, e) { ApplicationsHandler.filter({ userId: e.myRecord.identifier }); },
+	openDocuments: function(c, e) { DocumentsHandler.filter({ userId: e.myRecord.identifier }); },
+
 	COLUMNS: [ new TextColumn('identifier', 'ID', undefined, true),
 	    new TextColumn('clientName', 'Client'),
 		new EditColumn('id', 'Login ID'), new EditColumn('ats_username', 'ATS User Name'),
