@@ -21,6 +21,16 @@ var ClientsHandler = new ListTemplate({
 	IDENTIFIER: 'code',
 	CAN_ADD: true,
 	CAN_EDIT: true,
+
+	ROW_ACTIONS: [ new RowAction('openJobs', 'Jobs'), new RowAction('openUsers', 'Users'),
+	               new RowAction('openApplications', 'Applications'),
+	               new RowAction('openDocuments', 'Documents') ],
+
+	openJobs: function(c, e) { JobsHandler.filter({ clientId: e.myRecord.id }); },
+	openUsers: function(c, e) { UsersHandler.filter({ clientId: e.myRecord.id }); },
+	openApplications: function(c, e) { ApplicationsHandler.filter({ clientId: e.myRecord.id }); },
+	openDocuments: function(c, e) { DocumentsHandler.filter({ clientId: e.myRecord.id }); },
+
 	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
 		new EditColumn('code', 'Code'), new EditColumn('name', 'Name'),
 		new TextColumn('emailPrefix', 'Email Prefix'), new TextColumn('responseHost', 'Response Host'),
@@ -160,6 +170,7 @@ var UsersHandler = new ListTemplate({
 	SINGULAR: 'User',
 	PLURAL: 'Users',
 	RESOURCE: 'users',
+	IDENTIFIER: 'identifier',
 	CAN_ADD: true,
 	CAN_EDIT: true,
 
@@ -173,7 +184,7 @@ var UsersHandler = new ListTemplate({
 	    new TextColumn('clientName', 'Client'),
 		new EditColumn('id', 'Login ID'), new EditColumn('ats_username', 'ATS User Name'),
 		new EditColumn('first_name', 'First Name'), new EditColumn('last_name', 'Last Name'),
-		new TextColumn('createdAt', 'Created At', 'toDateTime', true), new TextColumn('updatedAt', 'Updated At', 'toDateTime') ],
+		new TextColumn('createdAt', 'Created At', 'toDateTime'), new TextColumn('updatedAt', 'Updated At', 'toDateTime') ],
 	FIELDS: [ new TextField('identifier', 'ID'),
 	    new DropField('clientId', 'Select Client', true, 'clients', 'clientName'),
 	    new TextField('clientName', 'Selected Client', undefined, undefined, true),

@@ -54,7 +54,8 @@ Template.prototype.run = function(criteria, body, method)
 	if (undefined == criteria.isModal)
 		criteria.isModal = (undefined == criteria.body);
 
-	if (criteria.isModal)
+	// When modal ListTemplate re-sorts, do NOT need to re-add "center" and "closeMe" methods. 
+	if (criteria.isModal && (undefined == criteria.body))
 	{
 		var b = document.body;
 		b.insertBefore(body = this.createDiv('Loading ...', 'modalDialog'), b.firstChild);
