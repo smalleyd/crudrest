@@ -95,7 +95,7 @@ var JobsHandler = new ListTemplate({
 	CAN_EDIT: true,
 
 	ROW_ACTIONS: [ new RowAction('openApplications', 'Applications') ],
-	openApplications: function(c, e) { ApplicationsHandler.filter({ userId: e.myRecord.identifier }); },
+	openApplications: function(c, e) { ApplicationsHandler.filter({ jobId: e.myRecord.id }); },
 
 	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
 	           new TextColumn('clientCode', 'Client'),
@@ -402,6 +402,7 @@ var LanguagesHandler = new ListTemplate({
 	RESOURCE: 'languages',
 	CAN_ADD: true,
 	CAN_EDIT: true,
+
 	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
 	           new EditColumn('name', 'Name'),
 	           new TextColumn('active', 'Active?') ],
