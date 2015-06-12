@@ -2,13 +2,14 @@ var AdminApp = new TabTemplate();
 
 AdminApp.TABS = [ { id: 'doClients', caption: 'Clients' }, { id: 'doJobs', caption: 'Jobs' },
 	{ id: 'doUsers', caption: 'Users' }, { id: 'doApplications', caption: 'Applications' },
-	{ id: 'doDocuments', caption: 'Documents' },
+	{ id: 'doAnswers', caption: 'Answers' }, { id: 'doDocuments', caption: 'Documents' },
 	{ id: 'doLanguages', caption: 'Languages' }, { id: 'doMailTemplates', caption: 'Mail Templates' } ];
 
 AdminApp.doClients = function(body) { ClientsHandler.init(body); }
 AdminApp.doJobs = function(body) { JobsHandler.init(body); }
 AdminApp.doUsers = function(body) { UsersHandler.init(body); }
 AdminApp.doApplications = function(body) { ApplicationsHandler.init(body); }
+AdminApp.doAnswers = function(body) { UserAnswersHandler.init(body); }
 AdminApp.doDocuments = function(body) { DocumentsHandler.init(body); }
 AdminApp.doLanguages = function(body) { LanguagesHandler.init(body); }
 AdminApp.doMailTemplates = function(body) { MailTemplatesHandler.init(body); }
@@ -241,8 +242,12 @@ var ApplicationsHandler = new ListTemplate({
 	RESOURCE: 'applications',
 	CAN_EDIT: true,
 
-	ROW_ACTIONS: [ new RowAction('openDocuments', 'Documents') ],
+	ROW_ACTIONS: [ new RowAction('openAnswers', 'Answers'),
+	               new RowAction('openDocuments', 'Documents') ],
 
+	openAnswers: function(criteria, elem) {
+		UserAnswersHandler.filter({ applicationId: elem.myRecord.id });
+	},
 	openDocuments: function(criteria, elem) {
 		DocumentsHandler.filter({ applicationId: elem.myRecord.id });
 	},
@@ -306,6 +311,84 @@ var ApplicationsHandler = new ListTemplate({
 		          new DatesField('createdAt', 'Created At'),
 		          new DatesField('updatedAt', 'Updated At'),
 		          new ListField('pageSize', 'Page Size', false, 'pageSizes', 'Number of records on the page') ]
+	}
+});
+
+var UserAnswersHandler = new ListTemplate({
+	NAME: 'userAnswer',
+	SINGULAR: 'Answer',
+	PLURAL: 'Answers',
+	RESOURCE: 'answers',
+	CAN_ADD: true,
+	CAN_EDIT: true,
+	EDIT_METHOD: 'put',
+
+	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
+	           new TextColumn('userId', 'User'),
+	           new TextColumn('jobId', 'Job'),
+	           new TextColumn('questionId', 'Question'),
+	           new TextColumn('ats_id', 'Answer'),
+	           new TextColumn('value', 'Value'),
+	           new TextColumn('index', 'Index'),
+	           new TextColumn('empty', 'Empty?'),
+	           new TextColumn('answer_date', 'Created At', 'toDateTime'),
+	           new TextColumn('updatedAt', 'Updated At', 'toDateTime') ],
+
+	FIELDS: [ new TextColumn('id', 'ID'),
+	          new TextColumn('userId', 'User'),
+	          new TextColumn('jobId', 'Job'),
+	          new EditField('questionId', 'Question ATS ID', true, false, 255, 50),
+	          new EditField('ats_id', 'Answer ATS ID', true, false, 255, 50),
+	          new EditField('index', 'Index', true, false, 10, 5),
+	          new EditField('value', 'Value', false, true, 60, 5),
+	          new BoolField('empty', 'Is Empty?', false),
+	          new TextField('answer_date', 'Created At', 'toDateTime'),
+	          new TextField('updatedAt', 'Updated At', 'toDateTime') ],
+
+	SEARCH: {
+		NAME: 'userAnswer',
+		SINGULAR: 'Answer',
+		PLURAL: 'Answers',
+		RESOURCE: 'answers',
+
+		FIELDS: [ new EditField('id', 'ID', false, false, 20, 10),
+		          new DropField('clientId', 'Select Client', false, 'clients', 'clientName'),
+		          new TextField('clientName', 'Selected Client', undefined, undefined, true),
+		          new DropField('userId', 'Select User', false, function(c) {
+		        	  var id = c.extra.form.clientId.value;
+		        	  if ('' == id)
+		        	  {
+		        		  window.alert('Please select a client first.');
+		        		  DropdownList.focus(c.extra.form, 'clientId');
+		        		  return;
+		        	  }
+
+		        	  Template.get('clients/' + id + '/users/find', { name: c.field.value }, function(data) {
+		        		  c.caller.fill(c, data);
+		        	  });
+		          }, 'userName'),
+		          new TextField('userName', 'Selected User', undefined, undefined, true),
+		          new DropField('jobId', 'Select Job', false, function(c) {
+		        	  var id = c.extra.form.clientId.value;
+		        	  if ('' == id)
+		        	  {
+		        		  window.alert('Please select a client first.');
+		        		  DropdownList.focus(c.extra.form, 'clientId');
+		        		  return;
+		        	  }
+
+		        	  Template.get('clients/' + id + '/jobs/find', { name: c.field.value }, function(data) {
+		        		  c.caller.fill(c, data);
+		        	  });
+		          }, 'jobName'),
+		          new TextField('jobName', 'Selected Job', undefined, undefined, true),
+		          new EditField('loginId', 'Login ID', false, false, 128, 50),
+		          new EditField('slug', 'Slug', false, false, 128, 50),
+		          new EditField('languageId', 'Language', false, false, 5, 5),
+		          new EditField('parentQuestionAtsId', 'Parent Question ATS ID', false, false, 255, 50),
+		          new EditField('questionAtsId', 'Question ATS ID', false, false, 255, 50),
+		          new EditField('answerAtsId', 'Answer ATS ID', false, false, 255, 50)
+		          ]
 	}
 });
 
