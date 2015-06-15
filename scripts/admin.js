@@ -83,7 +83,7 @@ var ClientsHandler = new ListTemplate({
 			new ListField('active', 'Is Active?', false, 'yesNoOptions', undefined, 'No Search'),
 			new DatesField('createdAt', 'Created At'),
 			new DatesField('updatedAt', 'Updated At'),
-			new ListField('pageSize', 'Page Size', false, 'pageSizeOptions', 'Number of records on the page', 'Default') ]
+			new ListField('pageSize', 'Page Size', false, 'pageSizes', 'Number of records on the page') ]
 	}
 });
 
@@ -354,6 +354,7 @@ var UserAnswersHandler = new ListTemplate({
 		FIELDS: [ new EditField('id', 'ID', false, false, 20, 10),
 		          new DropField('clientId', 'Select Client', false, 'clients', 'clientName'),
 		          new TextField('clientName', 'Selected Client', undefined, undefined, true),
+		          new HideField('applicationId'),
 		          new DropField('userId', 'Select User', false, function(c) {
 		        	  var id = c.extra.form.clientId.value;
 		        	  if ('' == id)
@@ -387,8 +388,8 @@ var UserAnswersHandler = new ListTemplate({
 		          new EditField('languageId', 'Language', false, false, 5, 5),
 		          new EditField('parentQuestionAtsId', 'Parent Question ATS ID', false, false, 255, 50),
 		          new EditField('questionAtsId', 'Question ATS ID', false, false, 255, 50),
-		          new EditField('answerAtsId', 'Answer ATS ID', false, false, 255, 50)
-		          ]
+		          new EditField('answerAtsId', 'Answer ATS ID', false, false, 255, 50),
+				  new ListField('pageSize', 'Page Size', false, 'pageSizes', 'Number of records on the page') ]
 	}
 });
 

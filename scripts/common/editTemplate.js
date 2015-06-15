@@ -39,6 +39,12 @@ function EditField(id, caption, isRequired, isLong, maxLength, size, footnote)
 	this.footnote = footnote;
 }
 
+function HideField(id)
+{
+	this.isHidden = true;
+	this.id = id;
+}
+
 //A text area field that supplies an array of values separated by new lines.
 function MultiField(id, caption, isRequired, width, height, footnote)
 {
@@ -216,7 +222,7 @@ function FileField(id, caption, isRequired)
 EditTemplate.prototype = new Template();
 EditTemplate.prototype.doAdd = function(callback, body, value) { this.run({ value: ((undefined != value) ? value : { active: true }), filter: { isAdd: true }, callback: callback }, body); }
 EditTemplate.prototype.doEdit = function(id, callback, body) { this.run({ callback: callback, url: this.RESOURCE + '/' + id }, body, 'get'); }
-EditTemplate.prototype.doSearch = function(callback, body, filter) { this.run({ value: {}, filter: (filter ? filter : { isSearch: true, isAdd: false, pageSize: 20 }), callback: callback }, body); }
+EditTemplate.prototype.doSearch = function(callback, body, filter) { this.run({ value: {}, filter: $.extend({ isSearch: true, isAdd: false, pageSize: 20 }, filter), callback: callback }, body); }
 
 EditTemplate.prototype.EDIT_METHOD = 'post';
 
@@ -302,7 +308,7 @@ EditTemplate.prototype.populate = function(criteria, form)
 	for (var i = 0; i < this.FIELDS.length; i++)
 	{
 		var field = this.FIELDS[i];
-		if (!field.isEditable)
+		if (!field.isEditable && !field.isHidden)
 			continue;
 
 		var name = field.id;
@@ -404,6 +410,12 @@ EditTemplate.prototype.generate = function(criteria)
 
 		name = field.id;
 		value = v[name];
+
+		if (field.isHidden)
+		{
+			o.appendChild(this.genHidden(name, value));
+			continue;
+		}
 
 		s = this.addDiv(fs);
 		e = this.addCaption(s, field.caption + (field.isRequired ? '*' : ''));

@@ -78,7 +78,7 @@ function RowAction(id, caption, css, condition)
 
 ListTemplate.prototype = new Template();
 ListTemplate.prototype.init = function(body) { return this.filter({}, body); }
-ListTemplate.prototype.filter = function(filter, body) { return this.run({ filter: filter, url: this.SEARCH_PATH }, body, this.SEARCH_METHOD); }
+ListTemplate.prototype.filter = function(filter, body) { return this.run({ filter: filter, baseFilter: filter, url: this.SEARCH_PATH }, body, this.SEARCH_METHOD); }
 
 ListTemplate.prototype.getTitle = function(criteria)
 {
@@ -580,7 +580,7 @@ ListTemplate.prototype.handleSearch = function(criteria, elem)
 		if (filter)
 			criteria.filter = filter;
 		me.run(criteria);
-	}, body);
+	}, body, criteria.baseFilter);
 }
 
 ListTemplate.prototype.removeRecord = function(criteria, elem)
