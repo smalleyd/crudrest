@@ -78,7 +78,13 @@ function RowAction(id, caption, css, condition)
 
 ListTemplate.prototype = new Template();
 ListTemplate.prototype.init = function(body) { return this.filter({}, body); }
-ListTemplate.prototype.filter = function(filter, body) { return this.run({ filter: filter, baseFilter: filter, url: this.SEARCH_PATH }, body, this.SEARCH_METHOD); }
+
+/** Opens the list limited by the filter.
+ *   @param filter
+ *   @param body
+ *   @param exclusions a map of fields/columns to be excluded from this instance of the display. Used for popup child displays.
+ */
+ListTemplate.prototype.filter = function(filter, body, exclusions) { return this.run({ filter: filter, baseFilter: filter, url: this.SEARCH_PATH, exclusions: exclusions }, body, this.SEARCH_METHOD); }
 
 ListTemplate.prototype.getTitle = function(criteria)
 {
@@ -208,9 +214,15 @@ ListTemplate.prototype.appendHeader = function(criteria, table)
 	if (this.HAS_ROW_ACTIONS)
 		r.insertCell(0);
 
+	var exclusions = $.extend({}, criteria.exclusions);
 	for (var i = 0; i < cols.length; i++)
 	{
 		c = cols[i];
+
+		// Exclude column?
+		if (exclusions[c.id])
+			continue;
+
 		this.insertHeader(r, c.id, c.caption, criteria);
 	}
 
@@ -226,6 +238,7 @@ ListTemplate.prototype.appendBody = function(criteria, table)
 	table.appendChild(o);
 
 	var me = this;
+	var exclusions = $.extend({}, criteria.exclusions);	// Column exclusions.
 
 	for (var i = 0; i < records.length; i++)
 	{
@@ -278,6 +291,11 @@ ListTemplate.prototype.appendBody = function(criteria, table)
 		for (var j = 0; j < cols.length; j++)
 		{
 			c = cols[j];
+
+			// Exclude column?
+			if (exclusions[c.id])
+				continue;
+
 			text = this[c.formatter](v = record[c.id]);
 
 			// Should an anchor be created as the cell element.

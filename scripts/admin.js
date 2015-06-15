@@ -27,9 +27,9 @@ var ClientsHandler = new ListTemplate({
 	               new RowAction('openApplications', 'Applications'),
 	               new RowAction('openDocuments', 'Documents') ],
 
-	openJobs: function(c, e) { JobsHandler.filter({ clientId: e.myRecord.id }); },
-	openUsers: function(c, e) { UsersHandler.filter({ clientId: e.myRecord.id }); },
-	openApplications: function(c, e) { ApplicationsHandler.filter({ clientId: e.myRecord.id }); },
+	openJobs: function(c, e) { JobsHandler.filter({ clientId: e.myRecord.id }, undefined, { clientCode: true }); },
+	openUsers: function(c, e) { UsersHandler.filter({ clientId: e.myRecord.id }, undefined, { clientName: true }); },
+	openApplications: function(c, e) { ApplicationsHandler.filter({ clientId: e.myRecord.id }, undefined, { clientName: true }); },
 	openDocuments: function(c, e) { DocumentsHandler.filter({ clientId: e.myRecord.id }); },
 
 	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
@@ -96,7 +96,7 @@ var JobsHandler = new ListTemplate({
 	CAN_EDIT: true,
 
 	ROW_ACTIONS: [ new RowAction('openApplications', 'Applications') ],
-	openApplications: function(c, e) { ApplicationsHandler.filter({ jobId: e.myRecord.id }); },
+	openApplications: function(c, e) { ApplicationsHandler.filter({ jobId: e.myRecord.id }, undefined, { clientName: true, slug: true }); },
 
 	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
 	           new TextColumn('clientCode', 'Client'),
@@ -182,8 +182,8 @@ var UsersHandler = new ListTemplate({
 	ROW_ACTIONS: [ new RowAction('openApplications', 'Applications'),
 	               new RowAction('openDocuments', 'Documents') ],
 
-	openApplications: function(c, e) { ApplicationsHandler.filter({ userId: e.myRecord.identifier }); },
-	openDocuments: function(c, e) { DocumentsHandler.filter({ userId: e.myRecord.identifier }); },
+	openApplications: function(c, e) { ApplicationsHandler.filter({ userId: e.myRecord.identifier }, undefined, { clientName: true, user_id: true }); },
+	openDocuments: function(c, e) { DocumentsHandler.filter({ userId: e.myRecord.identifier }, undefined, { file_name: true, userId: true, emailIdentifier: true }); },
 
 	COLUMNS: [ new TextColumn('identifier', 'ID', undefined, true),
 	    new TextColumn('clientName', 'Client'),
@@ -246,10 +246,10 @@ var ApplicationsHandler = new ListTemplate({
 	               new RowAction('openDocuments', 'Documents') ],
 
 	openAnswers: function(criteria, elem) {
-		UserAnswersHandler.filter({ applicationId: elem.myRecord.id });
+		UserAnswersHandler.filter({ applicationId: elem.myRecord.id }, undefined, { userId: true, jobId: true, questionId: true });
 	},
 	openDocuments: function(criteria, elem) {
-		DocumentsHandler.filter({ applicationId: elem.myRecord.id });
+		DocumentsHandler.filter({ applicationId: elem.myRecord.id }, undefined, { file_name: true, userId: true, emailIdentifier: true });
 	},
 
 	// Can't update application so disable the checkboxes on the list.
@@ -334,14 +334,15 @@ var UserAnswersHandler = new ListTemplate({
 	           new TextColumn('answer_date', 'Created At', 'toDateTime'),
 	           new TextColumn('updatedAt', 'Updated At', 'toDateTime') ],
 
-	FIELDS: [ new TextColumn('id', 'ID'),
-	          new TextColumn('userId', 'User'),
-	          new TextColumn('jobId', 'Job'),
+	FIELDS: [ new TextField('id', 'ID'),
+	          new TextField('userId', 'User'),
+	          new TextField('jobId', 'Job'),
 	          new EditField('questionId', 'Question ATS ID', true, false, 255, 50),
 	          new EditField('ats_id', 'Answer ATS ID', true, false, 255, 50),
 	          new EditField('index', 'Index', true, false, 10, 5),
 	          new EditField('value', 'Value', false, true, 60, 5),
 	          new BoolField('empty', 'Is Empty?', false),
+	          new TextField('transId', 'Transaction ID'),
 	          new TextField('answer_date', 'Created At', 'toDateTime'),
 	          new TextField('updatedAt', 'Updated At', 'toDateTime') ],
 
@@ -389,6 +390,15 @@ var UserAnswersHandler = new ListTemplate({
 		          new EditField('parentQuestionAtsId', 'Parent Question ATS ID', false, false, 255, 50),
 		          new EditField('questionAtsId', 'Question ATS ID', false, false, 255, 50),
 		          new EditField('answerAtsId', 'Answer ATS ID', false, false, 255, 50),
+		          new EditField('index', 'Index', false, false, 10, 10),
+		          new RangeField('index', 'Index Range', false, 10, 10),
+		          new EditField('value', 'Value', false, false, 255, 50, 'Performs a contains search.'),
+		          new EditField('valueExact', 'Value', false, false, 255, 50, 'Performs an exact match'),
+		          new ListField('empty', 'Is Empty?', false, 'yesNoOptions', undefined, 'No Search'),
+		          new EditField('transId', 'Transaction ID', false, false, 20, 15),
+		          new RangeField('transId', 'Transaction ID', false, 20, 15),
+		          new DatesField('createdAt', 'Created At'),
+		          new DatesField('updatedAt', 'Updated At'),
 				  new ListField('pageSize', 'Page Size', false, 'pageSizes', 'Number of records on the page') ]
 	}
 });
