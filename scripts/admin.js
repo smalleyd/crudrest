@@ -3,7 +3,8 @@ var AdminApp = new TabTemplate();
 AdminApp.TABS = [ { id: 'doClients', caption: 'Clients' }, { id: 'doJobs', caption: 'Jobs' },
 	{ id: 'doUsers', caption: 'Users' }, { id: 'doApplications', caption: 'Applications' },
 	{ id: 'doAnswers', caption: 'Answers' }, { id: 'doDocuments', caption: 'Documents' },
-	{ id: 'doLanguages', caption: 'Languages' }, { id: 'doMailTemplates', caption: 'Mail Templates' } ];
+	{ id: 'doLanguages', caption: 'Languages' }, { id: 'doMailTemplates', caption: 'Mail Templates' },
+	{ id: 'doLogs', caption: 'Logs' }];
 
 AdminApp.doClients = function(body) { ClientsHandler.init(body); }
 AdminApp.doJobs = function(body) { JobsHandler.init(body); }
@@ -13,6 +14,7 @@ AdminApp.doAnswers = function(body) { UserAnswersHandler.init(body); }
 AdminApp.doDocuments = function(body) { DocumentsHandler.init(body); }
 AdminApp.doLanguages = function(body) { LanguagesHandler.init(body); }
 AdminApp.doMailTemplates = function(body) { MailTemplatesHandler.init(body); }
+AdminApp.doLogs = function(body) { LogsHandler.filter({ pageSize: 100 }, body); }
 
 var ClientsHandler = new ListTemplate({
 	NAME: 'client',
@@ -557,6 +559,31 @@ var MailTemplatesHandler = new ListTemplate({
 		          new ListField('active', 'Is Active?', false, 'yesNoOptions', undefined, 'No Search'),
 		          new DatesField('createdAt', 'Created At'),
 		          new DatesField('updatedAt', 'Updated At'),
+		          new ListField('pageSize', 'Page Size', false, 'pageSizes', 'Number of records on the page') ]
+	}
+});
+
+var LogsHandler = new ListTemplate({
+	NAME: 'log',
+	SINGULAR: 'Log',
+	PLURAL: 'Logs',
+	RESOURCE: 'logs',
+
+	CAN_EDIT: true,
+
+	COLUMNS: [ new TextColumn('name', 'Name', undefined, true), new TextColumn('level', 'Level') ],
+
+	FIELDS: [ new TextField('name', 'Name'),
+	          new ListField('level', 'Level', true, 'logLevels', 'Change the log level.') ],
+
+	SEARCH: {
+		NAME: 'log',
+		SINGULAR: 'Log',
+		PLURAL: 'Logs',
+		RESOURCE: 'logs',
+
+		FIELDS: [ new EditField('name', 'Name', false, false, 255, 60),
+		          new ListField('level', 'Level', false, 'logLevels', undefined, 'No Search'),
 		          new ListField('pageSize', 'Page Size', false, 'pageSizes', 'Number of records on the page') ]
 	}
 });
