@@ -98,3 +98,4 @@ form b { display: inline-block; width: 200px; vertical-align: top; }
 form b em { vertical-align: top; display: block; font-size: 8pt; font-weight: normal; padding-right: 5px; }
 form.login b { width: 120px; }
 form.client b { width: 300px; }
+form b.disabled { color: #BAD1CD; }

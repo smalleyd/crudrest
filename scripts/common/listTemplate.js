@@ -3,7 +3,6 @@ function ListTemplate(properties)
 	this.load(properties);
 	if (this.CAN_EDIT || this.CAN_ADD)
 		this.EDITOR = new EditTemplate(properties);
-	this.CAN_REMOVE = (undefined != this.REMOVE_URL);
 	this.OPEN_CHILD = (undefined != this.openChild);
 	this.HAS_ROW_ACTIONS = (this.CAN_REMOVE || this.OPEN_CHILD || this.ROW_ACTIONS);
 
@@ -607,7 +606,7 @@ ListTemplate.prototype.removeRecord = function(criteria, elem)
 		return;
 
 	var me = this;
-	this.post(this.REMOVE_URL, elem.myRecord, function(value) {
+	this.remove(this.RESOURCE, elem.myRecord.id, function(value) {
 		if (value.isError)
 			window.alert(value.message);
 		else

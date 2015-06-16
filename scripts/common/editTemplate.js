@@ -224,6 +224,7 @@ EditTemplate.prototype.doAdd = function(callback, body, value) { this.run({ valu
 EditTemplate.prototype.doEdit = function(id, callback, body) { this.run({ callback: callback, url: this.RESOURCE + '/' + id }, body, 'get'); }
 EditTemplate.prototype.doSearch = function(callback, body, filter) { this.run({ value: {}, filter: $.extend({ isSearch: true, isAdd: false, pageSize: 20 }, filter), callback: callback }, body); }
 
+EditTemplate.prototype.ADD_METHOD = 'post';
 EditTemplate.prototype.EDIT_METHOD = 'post';
 
 /** Used to set the title bar caption for modal dialogs. */
@@ -271,7 +272,8 @@ EditTemplate.prototype.handleSubmit = function(criteria, form)
 	}
 
 	var me = this;
-	this[this.EDIT_METHOD](this.RESOURCE, criteria.value, function(v) {
+	var method = criteria.filter.isAdd ? this.ADD_METHOD : this.EDIT_METHOD;
+	this[method](this.RESOURCE, criteria.value, function(v) {
 		me.processResponse(v, criteria, form);
 	});
 }

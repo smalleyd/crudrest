@@ -162,6 +162,18 @@ Template.prototype.put = Template.put = function(url, filter, handler, headers)
 		contentType: 'application/json; charset=UTF-8' });
 }
 
+Template.prototype.remove = Template.remove = function(url, id, handler, headers)
+{
+	// Wrap all GET calls to check for authentication exceptions and force a login.
+	// Plus make sure that for IE it's a unique call.
+	// Do NOT use convenience method of .get so that can specify to NOT cache.
+	var me = this;
+	// $.get(REST_PATH + url, params,
+	$.ajax(REST_PATH + url + '/' + id, { type: 'DELETE', headers: headers,
+		success: function(value) { handler(value); },
+		error: function(xhr) { me.handleError(xhr, handler); }});
+}
+
 Template.prototype.handleError = function(xhr, handler)
 {
 	if (403 == xhr.status)

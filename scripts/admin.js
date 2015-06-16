@@ -323,6 +323,7 @@ var UserAnswersHandler = new ListTemplate({
 	RESOURCE: 'answers',
 	CAN_ADD: true,
 	CAN_EDIT: true,
+	CAN_REMOVE: true,
 	EDIT_METHOD: 'put',
 
 	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
@@ -339,6 +340,7 @@ var UserAnswersHandler = new ListTemplate({
 	FIELDS: [ new TextField('id', 'ID'),
 	          new TextField('userId', 'User'),
 	          new TextField('jobId', 'Job'),
+	          new EditField('jobApplicationId', 'Job Application ID', true, false, 20, 10),
 	          new EditField('questionId', 'Question ATS ID', true, false, 255, 50),
 	          new EditField('ats_id', 'Answer ATS ID', true, false, 255, 50),
 	          new EditField('index', 'Index', true, false, 10, 5),
@@ -347,6 +349,11 @@ var UserAnswersHandler = new ListTemplate({
 	          new TextField('transId', 'Transaction ID'),
 	          new TextField('answer_date', 'Created At', 'toDateTime'),
 	          new TextField('updatedAt', 'Updated At', 'toDateTime') ],
+
+	onEditorPostLoad: function(criteria) {
+		if (!criteria.filter.isAdd)	// Allow adds to set a job application ID.
+			criteria.form.jobApplicationId.setFieldStatus(false);
+	},
 
 	SEARCH: {
 		NAME: 'userAnswer',
