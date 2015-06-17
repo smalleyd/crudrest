@@ -54,7 +54,7 @@ var META_LOGIN = {
 				e.onclick = function(ev) { me.doLogout(); return false; };
 			}
 		});
-	},
+	}
 };
 
 var LoginHandler = new EditTemplate(META_LOGIN);
