@@ -326,6 +326,10 @@ var UserAnswersHandler = new ListTemplate({
 	CAN_REMOVE: true,
 	EDIT_METHOD: 'put',
 
+	onListPostLoad: function(criteria) {
+		$('input[type=checkbox]', criteria.body).attr('disabled', true);
+	},
+
 	COLUMNS: [ new TextColumn('id', 'ID', undefined, true),
 	           new TextColumn('userId', 'User'),
 	           new TextColumn('jobId', 'Job'),
