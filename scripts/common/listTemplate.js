@@ -76,6 +76,10 @@ function RowAction(id, caption, css, condition)
 }
 
 ListTemplate.prototype = new Template();
+
+ListTemplate.prototype.MAX_PAGES = 500;
+ListTemplate.prototype.HALF_MAX_PAGES = 250;
+
 ListTemplate.prototype.init = function(body) { return this.filter({}, body); }
 
 /** Opens the list limited by the filter.
@@ -510,10 +514,32 @@ ListTemplate.prototype.insertPaging_ = function(section, criteria)
 		c.appendChild(document.createTextNode(' '));
 	}
 
-	c.appendChild(e = document.createElement('select'));
-	for (var i = 1; i <= v.pages; i++)
-		e.options[i - 1] = new Option(i, i, false, i == v.page);
+	// Incase there are more than 500 pages.
+	var start = 1, end = v.pages;
+	if (this.MAX_PAGES < v.pages)
+	{
+		if (this.HALF_MAX_PAGES < v.page)
+			start = v.page - this.HALF_MAX_PAGES;
+		end = start + this.MAX_PAGES;
+		if (end > v.pages)
+		{
+			end = v.pages;
+			start = end - this.MAX_PAGES;
+		}
+	}
 
+	c.appendChild(e = document.createElement('select'));
+	var j = 0;
+	if (1 < start)	// Always include the first page as a quick way to all the way home.
+		e.options[j++] = new Option(1, 1, false, 1 == v.page);
+		
+	for (var i = start; i <= end; i++, j++)
+		e.options[j] = new Option(i, i, false, i == v.page);
+
+	// Always include the last page for a quick way to the end.
+	if (v.pages > end)
+		e.options[j++] = new Option(v.pages, v.pages, false, v.pages == v.page);
+		
 	e.onchange = function(ev) { this.nextPage = this.value; me.doPaging(criteria, this); };
 
 	if (v.pages > v.page)
